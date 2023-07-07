@@ -383,6 +383,9 @@ main {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
   padding: 10px;
   border-bottom: 1px solid var(--border-main);
   -webkit-box-align: center;
@@ -443,3 +446,52 @@ main {
     .grid-sizer,
     .grid-item {
       width: calc(100% / 4); } }
+
+form {
+  display: -ms-grid;
+  display: grid;
+  gap: 15px;
+  margin: 15px; }
+  @media only screen and (min-width: 600px) {
+    form {
+      margin: 30px; } }
+  @media only screen and (min-width: 768px) {
+    form {
+      -ms-grid-columns: (1fr)[2];
+      grid-template-columns: repeat(2, 1fr); } }
+  form .fullWidth {
+    grid-column: 1 / -1; }
+  form label {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column; }
+    form label b {
+      font-size: 14px;
+      font-weight: 900;
+      font-family: var(--font-accent);
+      letter-spacing: 0; }
+    form label input,
+    form label select {
+      border: 1px solid var(--border-main);
+      background: var(--bg-content);
+      color: var(--text-body);
+      padding: 10px 15px; }
+  form button {
+    background: var(--bg-accent);
+    color: var(--text-on-accent);
+    cursor: pointer;
+    border: none;
+    max-width: -webkit-max-content;
+    max-width: -moz-max-content;
+    max-width: max-content;
+    margin: 0 auto;
+    padding: 10px 15px;
+    border-radius: 2px;
+    font-weight: 900;
+    text-transform: uppercase; }

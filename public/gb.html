@@ -6,6 +6,7 @@
 
         <!--Styles-->
         <link rel="stylesheet" href="../dist/css/styles.css" />
+        <link rel="stylesheet" href="https://dawneggleton.github.io/jcink-temps/sslp/characters.css" />
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,52 +129,21 @@
             </div>
             <script>
                 //set overall variables
-                let sheet = `https://opensheet.elk.sh/1KDKs6Kh7dXd9V3Vgcw9ipLPiaDsUqiyRPNGYw7wFnsQ/Threads`;
-                const site = 'Godly Behaviour';
-                const siteURL = 'https://godlybehaviour.jcink.net';
-                let threads = [];
-                var filters = {};
+                let siteName = 'Godly Behaviour';
 
                 //set class variables
                 let $container = $('#tracker--rows');
-                let typeSearch = `#quicksearch`;
-                let threadTitle = `.thread--title`;
-                let visible = `is-visible`;
-                let filterGroup = `.tracker--filter-group`;
-                let filterOptions = `.tracker--filter-group input`;
-                let sorts = `.tracker--header button`;
-                let gridItem = `.grid-item`;
-                let defaultShow = `.thread:not(.complete)`;
 
-                fetch(sheet)
+                fetch(`${sheet}/Threads`)
                 .then((response) => response.json())
-                .then((data) => {
-                    let threads = data.filter(item => item.Site === site);
-                    threads.sort((a, b) => {
-                        let aStatus = a.Status.toLowerCase() === 'complete' ? 1 : 0;
-                        let bStatus = b.Status.toLowerCase() === 'complete' ? 1 : 0;
-                        if(a.Character < b.Character) {
-                            return -1;
-                        } else if (a.Character > b.Character) {
-                            return 1;
-                        } else if(aStatus < bStatus) {
-                            return -1;
-                        } else if (aStatus > bStatus) {
-                            return 1;
-                        } else if(new Date(a.ICDate) < new Date(b.ICDate)) {
-                            return -1;
-                        } else if (new Date(a.ICDate) > new Date(b.ICDate)) {
-                            return 1;
-                        } else if(new Date(a.LastUpdate) < new Date(b.LastUpdate)) {
-                            return -1;
-                        } else if (new Date(a.LastUpdate) > new Date(b.LastUpdate)) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    });
-                    populatePage(threads);
-                }).then(() => {
+                .then((threadData) => {
+                    fetch(`${sheet}/Sites`)
+                    .then((response) => response.json())
+                    .then((siteData) => {
+                        let siteObject = siteData.filter(item => item.Site === siteName)[0];
+                        let threads = prepThreads(threadData, siteObject.Site);
+                        populatePage(threads, siteObject);
+                    }).then(() => {
                     //initialize isotope
                     // quick search regex
                     let qsRegex;
@@ -205,6 +175,7 @@
                         $container.isotope('layout');
                     }, 300);
                     initIsotope();
+                });
                 });
             </script>
         </section>

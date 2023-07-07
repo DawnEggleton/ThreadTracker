@@ -58,12 +58,12 @@ function getDelay(date) {
     }
     return delayClass;
 }
-function formatThread(siteURL, status, character, feature, title, threadID, icDate, partner, type, lastPost, delayClass) {
-    let html = `<div class="thread grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} partner--${partner.split('#')[0].replace(' ', '')} grid-item"><div class="thread--wrap">
+function formatThread(site, siteURL, status, character, feature, title, threadID, icDate, partner, type, lastPost, delayClass, directoryString) {
+    let html = `<div class="thread lux-track grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} partner--${partner.split('#')[0].replace(' ', '')} grid-item"><div class="thread--wrap">
         <a class="thread--character" href="${siteURL}/?showuser=${character.split('#')[1]}">${character.split('#')[0]}</a>
         <a href="${siteURL}/?showtopic=${threadID}&view=getnewpost" target="_blank" class="thread--title">${title}</a>
         <span class="thread--feature">ft. <a href="${siteURL}/?showuser=${feature.split('#')[1]}">${feature.split('#')[0]}</a></span>
-        <span class="thread--partners">Writing with <a href="${siteURL}/?showuser=${partner.split('#')[1]}">${feature.split('#')[0]}</a></span>
+        <span class="thread--partners">Writing with <a href="${siteURL}/${directoryString}${partner.split('#')[1]}">${feature.split('#')[0]}</a></span>
         <span class="thread--ic-date">Set <span>${icDate}</span></span>
         <span class="thread--last-post">Last Active <span>${lastPost}</span></span>
         <div class="thread--buttons">
@@ -74,7 +74,7 @@ function formatThread(siteURL, status, character, feature, title, threadID, icDa
 
     return html;
 }
-function sendAjax(data) {
+function sendAjax(data, form = null) {
     console.log('send ajax');
     $.ajax({
         url: `https://script.google.com/macros/s/AKfycbwBKbff630nx14XxqQfJJCcKU5u444qf0WZ8w1q9FMFCvG38MKLMm_F_ctvZV9KUhd2bw/exec`,   
@@ -91,6 +91,9 @@ function sendAjax(data) {
         },
         complete: function () {
             console.log('complete');
+            if(form) {
+                form.originalTarget.querySelector('button[type="submit"]').innerText = 'Submit';
+            }
         }
     });
 }
@@ -136,7 +139,36 @@ function markComplete(e) {
         'Status': 'Complete'
     });
 }
-function populatePage(array) {
+function addThread(e) {
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
+        status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#site').selectedIndex].innerText,
+        character = `${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].      innerText}#${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].value}`,
+        featuring = `${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].innerText}#${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].value}`,
+        title = e.currentTarget.querySelector('#title').value,
+        threadID = e.currentTarget.querySelector('#id').value,
+        icDate = e.currentTarget.querySelector('#date').value,
+        partner = `${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].innerText}#${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].value}`,
+        type = e.currentTarget.querySelector('#type').options[e.currentTarget.querySelector('#type').selectedIndex].innerText,
+        year = new Date().getFullYear(),
+        month = getMonthName(new Date().getMonth()),
+        day = new Date().getDate(),
+        update = `${month} ${day}, ${year}`;
+
+    sendAjax({
+        'SubmissionType': 'new-thread',
+        'Site': site,
+        'Status': status,
+        'Character': character,
+        'Featuring': featuring,
+        'Title': title,
+        'ThreadID': threadID,
+        'ICDate': icDate,
+        'Partner': partner,
+        'Type': type,
+        'LastUpdated': update
+    }, e);
+}
+function populatePage(array, siteObject) {
     let html = ``;
     let characters = [], partners = [];
 
@@ -152,7 +184,8 @@ function populatePage(array) {
             partners.push(partner);
         }
 
-        html += formatThread(siteURL,
+        html += formatThread(siteObject.Site,
+                            siteObject.URL,
                             array[i].Status.toLowerCase(),
                             array[i].Character.toLowerCase(),
                             array[i].Featuring.toLowerCase(),
@@ -162,7 +195,8 @@ function populatePage(array) {
                             array[i].Partner.toLowerCase(),
                             array[i].Type.toLowerCase(),
                             array[i].LastUpdated.toLowerCase(),
-                            getDelay(array[i].LastUpdated));
+                            getDelay(array[i].LastUpdated),
+                            siteObject.Directory);
     }
     document.querySelector('#tracker--rows').insertAdjacentHTML('beforeend', html);
 
@@ -339,4 +373,31 @@ function initIsotope() {
             e.currentTarget.classList.add('is-checked');
         });
     });
+}
+function prepThreads(data, site) {
+    let threads = data.filter(item => item.Site === site);
+    threads.sort((a, b) => {
+        let aStatus = a.Status.toLowerCase() === 'complete' ? 1 : 0;
+        let bStatus = b.Status.toLowerCase() === 'complete' ? 1 : 0;
+        if(a.Character < b.Character) {
+            return -1;
+        } else if (a.Character > b.Character) {
+            return 1;
+        } else if(aStatus < bStatus) {
+            return -1;
+        } else if (aStatus > bStatus) {
+            return 1;
+        } else if(new Date(a.ICDate) < new Date(b.ICDate)) {
+            return -1;
+        } else if (new Date(a.ICDate) > new Date(b.ICDate)) {
+            return 1;
+        } else if(new Date(a.LastUpdate) < new Date(b.LastUpdate)) {
+            return -1;
+        } else if (new Date(a.LastUpdate) > new Date(b.LastUpdate)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+    return threads;
 }

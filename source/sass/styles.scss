@@ -407,6 +407,7 @@ main {
         z-index: 1;
         background: var(--bg-content);
         display: flex;
+        flex-wrap: wrap;
         padding: 10px;
         border-bottom: 1px solid var(--border-main);
         align-items: center;
@@ -474,5 +475,56 @@ main {
 
     @media only screen and (min-width: $xl) {
         width: calc(100% / 4);
+    }
+}
+
+form {
+    display: grid;
+    gap: 15px;
+    margin: 15px;
+
+    @media only screen and (min-width: $sm) {
+        margin: 30px;
+    }
+
+    @media only screen and (min-width: $md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fullWidth {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+
+        b {
+            font-size: 14px;
+            font-weight: 900;
+            font-family: var(--font-accent);
+            letter-spacing: 0;
+        }
+
+        input,
+        select {
+            border: 1px solid var(--border-main);
+            background: var(--bg-content);
+            color: var(--text-body);
+            padding: 10px 15px;
+        }
+    }
+
+    button {
+        background: var(--bg-accent);
+        color: var(--text-on-accent);
+        cursor: pointer;
+        border: none;
+        max-width: max-content;
+        margin: 0 auto;
+        padding: 10px 15px;
+        border-radius: 2px;
+        font-weight: 900;
+        text-transform: uppercase;
     }
 }
