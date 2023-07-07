@@ -10,6 +10,8 @@
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Palanquin+Dark:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Palanquin:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet">
 
         <!--Icons-->
 		<link href="https://dawneggleton.github.io/css/all.css" rel="stylesheet" />
@@ -29,11 +31,39 @@
     </head>
     <body>
         <nav>
-            <a href="./index.html">Index</a>
-            <a href="./gb.html" class="is-active">Godly Behaviour</a>
-            <a href="./kyh.html">Kill Your Heroes</a>
-            <a href="./legends.html">Legends</a>
-            <a href="./totl.html">Turn on the Light</a>
+            <ul>
+                <li>
+                    <a href="./index.html">Index</a>
+                </li>
+                <li>
+                    <a href="./gb.html" class="current">Godly Behaviour</a>
+                    <ul>
+                    <li><a href="./gb.html">Thread List</a></li>
+                    <!--<li><a href="./gb-charts.html">Charts</a></li>-->
+                    </ul>
+                </li>
+                <!--<li>
+                    <a href="./kyh.html" class="current">Kill Your Heroes</a>
+                    <ul>
+                    <li><a href="./kyh.html">Thread List</a></li>
+                    <li><a href="./kyh-charts.html">Charts</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="./legends.html">Legends</a>
+                    <ul>
+                    <li><a href="./legends.html">Thread List</a></li>
+                    <li><a href="./legends-charts.html">Charts</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="./totl.html">Turn on the Light</a>
+                    <ul>
+                    <li><a href="./totl.html">Thread List</a></li>
+                    <li><a href="./totl-charts.html">Charts</a></li>
+                    </ul>
+                </li>-->
+            </ul>
         </nav>
         <section class="tracker">
             <div class="tracker--header" data-type="flex">
@@ -41,80 +71,59 @@
                 <div class="tracker--sort-buttons" data-type="flex">
                     <button type="button" class="tracker--sort is-checked" data-sort="character">Character<br>(A -> Z)</button>
                     <button type="button" class="tracker--sort" data-sort="title">Title<br>(A -> Z)</button>
-                    <button type="button" class="tracker--sort" data-sort="icdate">IC Date<br>(Desc)</button>
+                    <button type="button" class="tracker--sort" data-sort="icdate">IC Date<br>(Asc)</button>
                     <button type="button" class="tracker--sort" data-sort="lastpost">Last Post<br>(Desc)</button>
-                    <span class="pagination"><span class="pagination_pagetxt"><a title="Jump to page..." href="javascript:multi_page_jump('https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name',2020,1000);">Pages:</a> (3)</span>&nbsp;<span class="pagination_current"><b>1</b></span>&nbsp;<a href="https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name&amp;st=1000" class="pagination_page">2</a>&nbsp;<a href="https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name&amp;st=2000" class="pagination_page">3</a>&nbsp;</span>
                 </div>
             </div>
             <div class="tracker--wrapper">
                 <div class="tracker--filters">
-                    <div class="tracker--filter">
-                        <a href="javascript:;">
-                            <i class="fa-solid fa-plus"></i>
-                            <i class="fa-solid fa-minus"></i>
-                            <span>Character</span>
-                        </a>
+                    <div class="tracker--filter character-list">
+                        <b>Character</b>
                         <div class="tracker--filter-group claim--labels tracker--characters" data-filter-group="character">
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
                         </div>
                     </div>
                     <div class="tracker--filter">
-                        <a href="javascript:;">
-                            <i class="fa-solid fa-plus"></i>
-                            <i class="fa-solid fa-minus"></i>
-                            <span>Partner</span>
-                        </a>
+                        <b>Partner</b>
                         <div class="tracker--filter-group claim--labels tracker--partners" data-filter-group="partner">
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
                         </div>
                     </div>
                     <div class="tracker--filter">
-                        <a href="javascript:;">
-                            <i class="fa-light fa-plus"></i>
-                            <i class="fa-light fa-minus"></i>
-                            <span>Last Reply</span>
-                        </a>
-                        <div class="ml--filter-group claim--labels" data-filter-group="lastreply">
+                        <b>Last Reply</b>
+                        <div class="tracker--filter-group claim--labels" data-filter-group="lastreply">
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">any time</label>
-                            <label><input type="checkbox" value=".okay">less than a week</label>
-                            <label><input type="checkbox" value=".week">more than a week</label>
-                            <label><input type="checkbox" value=".month">more than a month</label>
-                            <label><input type="checkbox" value=".quarter">more than three months</label>
-                            <label><input type="checkbox" value=".half">more than six months</label>
-                            <label><input type="checkbox" value=".year">more than a year</label>
+                            <label><input type="checkbox" value=".delay--okay">less than a week</label>
+                            <label><input type="checkbox" value=".delay--week">more than a week</label>
+                            <label><input type="checkbox" value=".delay--month">more than a month</label>
+                            <label><input type="checkbox" value=".delay--quarter">more than three months</label>
+                            <label><input type="checkbox" value=".delay--half">more than six months</label>
+                            <label><input type="checkbox" value=".delay--year">more than a year</label>
                         </div>
                     </div>
                     <div class="tracker--filter">
-                        <a href="javascript:;">
-                            <i class="fa-light fa-plus"></i>
-                            <i class="fa-light fa-minus"></i>
-                            <span>Status</span>
-                        </a>
-                        <div class="ml--filter-group claim--labels" data-filter-group="status">
+                        <b>Status</b>
+                        <div class="tracker--filter-group claim--labels" data-filter-group="status">
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
-                            <label><input type="checkbox" value=".mine">my turn</label>
-                            <label><input type="checkbox" value=".theirs">their turn</label>
-                            <label><input type="checkbox" value=".planned">planned</label>
-                            <label><input type="checkbox" value=".complete">completed</label>
+                            <label><input type="checkbox" value=".status--mine">my turn</label>
+                            <label><input type="checkbox" value=".status--theirs">their turn</label>
+                            <label><input type="checkbox" value=".status--planned">planned</label>
+                            <label><input type="checkbox" value=".status--complete">completed</label>
                         </div>
                     </div>
                     <div class="tracker--filter">
-                        <a href="javascript:;">
-                            <i class="fa-light fa-plus"></i>
-                            <i class="fa-light fa-minus"></i>
-                            <span>Thread Type</span>
-                        </a>
-                        <div class="ml--filter-group claim--labels" data-filter-group="type">
+                        <b>Thread Type</b>
+                        <div class="tracker--filter-group claim--labels" data-filter-group="type">
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
-                            <label><input type="checkbox" value=".thread">thread</label>
-                            <label><input type="checkbox" value=".comm">comm</label>
-                            <label><input type="checkbox" value=".social">social media</label>
-                            <label><input type="checkbox" value=".one-shot">one-shot</label>
+                            <label><input type="checkbox" value=".type--thread">thread</label>
+                            <label><input type="checkbox" value=".type--comm">comm</label>
+                            <label><input type="checkbox" value=".type--social">social media</label>
+                            <label><input type="checkbox" value=".type--one-shot">one-shot</label>
                         </div>
                     </div>
                 </div>
                 <div class="tracker--content">
-                    <div id="tracker--rows" class="tracker--threads"><div class="grid-sizer"></div></div>
+                    <div id="tracker--rows" class="tracker--threads"></div>
                 </div>
             </div>
             <script>
@@ -140,8 +149,58 @@
                 .then((response) => response.json())
                 .then((data) => {
                     let threads = data.filter(item => item.Site === site);
+                    threads.sort((a, b) => {
+                        let aStatus = a.Status.toLowerCase() === 'complete' ? 1 : 0;
+                        let bStatus = b.Status.toLowerCase() === 'complete' ? 1 : 0;
+                        if(a.Character < b.Character) {
+                            return -1;
+                        } else if (a.Character > b.Character) {
+                            return 1;
+                        } else if(aStatus < bStatus) {
+                            return -1;
+                        } else if (aStatus > bStatus) {
+                            return 1;
+                        } else if(new Date(a.ICDate) < new Date(b.ICDate)) {
+                            return -1;
+                        } else if (new Date(a.ICDate) > new Date(b.ICDate)) {
+                            return 1;
+                        } else if(new Date(a.LastUpdate) < new Date(b.LastUpdate)) {
+                            return -1;
+                        } else if (new Date(a.LastUpdate) > new Date(b.LastUpdate)) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    });
                     populatePage(threads);
                 }).then(() => {
+                    //initialize isotope
+                    // quick search regex
+                    let qsRegex;
+                    let elements = document.querySelectorAll(gridItem);
+
+                    // init Isotope
+                    $container.isotope({
+                        itemSelector: gridItem,
+                        percentPosition: true,
+                        filter: defaultShow,
+                        getSortData: {
+                            character: '.thread--character',
+                            title: '.thread--title',
+                            icdate: function ($elem) {
+                                return Date.parse($elem.querySelector('.thread--ic-date span').innerText);
+                            },
+                            lastpost: function ($elem) {
+                                return Date.parse($elem.querySelector('.thread--last-post span').innerText);
+                            },
+                        },
+                        sortAscending: {
+                            character: true,
+                            title: true,
+                            icdate: true,
+                            lastpost: false,
+                        }
+                    });
                     initIsotope();
                 });
             </script>

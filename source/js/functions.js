@@ -59,16 +59,82 @@ function getDelay(date) {
     return delayClass;
 }
 function formatThread(siteURL, status, character, feature, title, threadID, icDate, partner, type, lastPost, delayClass) {
-    let html = `<div class="thread status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} partner--${partner.split('#')[0].replace(' ', '')} grid-item">
+    let html = `<div class="thread grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} partner--${partner.split('#')[0].replace(' ', '')} grid-item"><div class="thread--wrap">
         <a class="thread--character" href="${siteURL}/?showuser=${character.split('#')[1]}">${character.split('#')[0]}</a>
         <a href="${siteURL}/?showtopic=${threadID}&view=getnewpost" target="_blank" class="thread--title">${title}</a>
         <span class="thread--feature">ft. <a href="${siteURL}/?showuser=${feature.split('#')[1]}">${feature.split('#')[0]}</a></span>
         <span class="thread--partners">Writing with <a href="${siteURL}/?showuser=${partner.split('#')[1]}">${feature.split('#')[0]}</a></span>
-        <span class="thread--ic-date">Set ${icDate}</span>
-        <span class="thread--last-post">Last Active ${lastPost}</span>
-    </div>`;
+        <span class="thread--ic-date">Set <span>${icDate}</span></span>
+        <span class="thread--last-post">Last Active <span>${lastPost}</span></span>
+        <div class="thread--buttons">
+            <button onClick="changeStatus(this)" data-status="${status}" data-id="${threadID}" data-site="${site}">Change Turn</button>
+            <button onClick="markComplete(this)" data-id="${threadID}" data-site="${site}">Mark Complete</button>
+        </div>
+    </div></div>`;
 
     return html;
+}
+function sendAjax(data) {
+    console.log('send ajax');
+    $.ajax({
+        url: `https://script.google.com/macros/s/AKfycbwBKbff630nx14XxqQfJJCcKU5u444qf0WZ8w1q9FMFCvG38MKLMm_F_ctvZV9KUhd2bw/exec`,   
+        data: data,
+        method: "POST",
+        type: "POST",
+        dataType: "json", 
+        success: function () {
+            console.log('success');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log('error');
+            document.querySelector('.form--sort-warning').innerHTML = `Whoops! The sheet connection didn't quite work. Please refresh the page and try again! If this persists, please open the console (ctrl + shift + J) and send Lux a screenshot of what's there.`;
+        },
+        complete: function () {
+            console.log('complete');
+        }
+    });
+}
+function changeStatus(e) {
+    if(e.dataset.status === 'mine' || e.dataset.status === 'start') {
+        e.dataset.status = 'theirs';
+        let thread = e.parentNode.parentNode.parentNode;
+        thread.classList.remove('status--mine');
+        thread.classList.remove('status--start');
+        thread.classList.add('status--theirs');
+        sendAjax({
+            'SubmissionType': 'edit-thread',
+            'ThreadID': e.dataset.id,
+            'Site': e.dataset.site,
+            'Status': 'Theirs'
+        });
+    } else if(e.dataset.status === 'theirs' || e.dataset.status === 'expected') {
+        e.dataset.status = 'mine';
+        let thread = e.parentNode.parentNode.parentNode;
+        thread.classList.remove('status--theirs');
+        thread.classList.remove('status--expecting');
+        thread.classList.add('status--mine');
+        sendAjax({
+            'SubmissionType': 'edit-thread',
+            'ThreadID': e.dataset.id,
+            'Site': e.dataset.site,
+            'Status': 'Mine'
+        });
+    }
+}
+function markComplete(e) {
+    e.dataset.status = 'complete';
+    let thread = e.parentNode.parentNode.parentNode;
+    thread.classList.remove('status--mine');
+    thread.classList.remove('status--start');
+    thread.classList.remove('status--theirs');
+    thread.classList.remove('status--expecting');
+    thread.classList.add('status--complete');
+    sendAjax({
+        'SubmissionType': 'edit-thread',
+        'ThreadID': e.dataset.id,
+        'Site': e.dataset.site,
+        'Status': 'Complete'
+    });
 }
 function populatePage(array) {
     let html = ``;
@@ -218,35 +284,6 @@ function setCustomFilter() {
     });
 }
 function initIsotope() {
-    //initialize isotope
-    // quick search regex
-    let qsRegex;
-    let elements = document.querySelectorAll(gridItem);
-
-    // init Isotope
-    $(window).on('load', function() {
-        $container.isotope({
-            itemSelector: gridItem,
-            percentPosition: true,
-            masonry: {
-                columnWidth: '.grid-sizer',
-                gutter: 15
-            },
-            filter: defaultShow,
-            getSortData: {
-                character: '.thread--character',
-                name: '.thread--title',
-                icdate: '.thread--ic-date',
-                lastpost: '.thread--last-post',
-            },
-            sortAscending: {
-                character: true,
-                name: true,
-                icdate: false,
-                lastpost: true,
-            }
-        });
-    });
     //use value of input select to filter
     let checkboxes = document.querySelectorAll(filterOptions);
     checkboxes.forEach(checkbox => {
