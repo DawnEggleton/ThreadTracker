@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lux | Thread Tracker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--Styles-->
+        <link rel="stylesheet" href="../dist/css/styles.css" />
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <!--Icons-->
+		<link href="https://dawneggleton.github.io/css/all.css" rel="stylesheet" />
+
+        <!--Script Libraries-->
+		<script type='text/javascript' src='https://files.jcink.net/html/jquery-1.7.2.min.js'></script>
+		<script type='text/javascript' src='https://files.jcink.net/html/jquery.cookie-1.3.1.js'></script> 
+		<script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
+
+        <!--Settings-->
+        <script type='text/javascript' src='../dist/js/settings.js'></script>
+        <link rel="stylesheet" href="../dist/css/settings.css" />
+
+        <!--Scripts-->
+        <script type='text/javascript' src='../dist/js/functions.js'></script>
+        <script type='text/javascript' src='../dist/js/scripts.js'></script>
+    </head>
+    <body>
+        <nav>
+            <a href="./index.html">Index</a>
+            <a href="./gb.html" class="is-active">Godly Behaviour</a>
+            <a href="./kyh.html">Kill Your Heroes</a>
+            <a href="./legends.html">Legends</a>
+            <a href="./totl.html">Turn on the Light</a>
+        </nav>
+        <section class="tracker">
+            <div class="tracker--header" data-type="flex">
+                <input id="quicksearch" class="forminput memberlist-namesearch" type="text" size="25" name="name" value="" placeholder="Filter by name...">
+                <div class="tracker--sort-buttons" data-type="flex">
+                    <button type="button" class="tracker--sort is-checked" data-sort="character">Character<br>(A -> Z)</button>
+                    <button type="button" class="tracker--sort" data-sort="title">Title<br>(A -> Z)</button>
+                    <button type="button" class="tracker--sort" data-sort="icdate">IC Date<br>(Desc)</button>
+                    <button type="button" class="tracker--sort" data-sort="lastpost">Last Post<br>(Desc)</button>
+                    <span class="pagination"><span class="pagination_pagetxt"><a title="Jump to page..." href="javascript:multi_page_jump('https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name',2020,1000);">Pages:</a> (3)</span>&nbsp;<span class="pagination_current"><b>1</b></span>&nbsp;<a href="https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name&amp;st=1000" class="pagination_page">2</a>&nbsp;<a href="https://totl.jcink.net/index.php?&amp;act=Members&amp;photoonly=&amp;name=&amp;name_box=all&amp;max_results=1000&amp;filter=ALL&amp;sort_order=asc&amp;sort_key=name&amp;st=2000" class="pagination_page">3</a>&nbsp;</span>
+                </div>
+            </div>
+            <div class="tracker--wrapper">
+                <div class="tracker--filters">
+                    <div class="tracker--filter">
+                        <a href="javascript:;">
+                            <i class="fa-solid fa-plus"></i>
+                            <i class="fa-solid fa-minus"></i>
+                            <span>Character</span>
+                        </a>
+                        <div class="tracker--filter-group claim--labels tracker--characters" data-filter-group="character">
+                            <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
+                        </div>
+                    </div>
+                    <div class="tracker--filter">
+                        <a href="javascript:;">
+                            <i class="fa-solid fa-plus"></i>
+                            <i class="fa-solid fa-minus"></i>
+                            <span>Partner</span>
+                        </a>
+                        <div class="tracker--filter-group claim--labels tracker--partners" data-filter-group="partner">
+                            <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
+                        </div>
+                    </div>
+                    <div class="tracker--filter">
+                        <a href="javascript:;">
+                            <i class="fa-light fa-plus"></i>
+                            <i class="fa-light fa-minus"></i>
+                            <span>Last Reply</span>
+                        </a>
+                        <div class="ml--filter-group claim--labels" data-filter-group="lastreply">
+                            <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">any time</label>
+                            <label><input type="checkbox" value=".okay">less than a week</label>
+                            <label><input type="checkbox" value=".week">more than a week</label>
+                            <label><input type="checkbox" value=".month">more than a month</label>
+                            <label><input type="checkbox" value=".quarter">more than three months</label>
+                            <label><input type="checkbox" value=".half">more than six months</label>
+                            <label><input type="checkbox" value=".year">more than a year</label>
+                        </div>
+                    </div>
+                    <div class="tracker--filter">
+                        <a href="javascript:;">
+                            <i class="fa-light fa-plus"></i>
+                            <i class="fa-light fa-minus"></i>
+                            <span>Status</span>
+                        </a>
+                        <div class="ml--filter-group claim--labels" data-filter-group="status">
+                            <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
+                            <label><input type="checkbox" value=".mine">my turn</label>
+                            <label><input type="checkbox" value=".theirs">their turn</label>
+                            <label><input type="checkbox" value=".planned">planned</label>
+                            <label><input type="checkbox" value=".complete">completed</label>
+                        </div>
+                    </div>
+                    <div class="tracker--filter">
+                        <a href="javascript:;">
+                            <i class="fa-light fa-plus"></i>
+                            <i class="fa-light fa-minus"></i>
+                            <span>Thread Type</span>
+                        </a>
+                        <div class="ml--filter-group claim--labels" data-filter-group="type">
+                            <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
+                            <label><input type="checkbox" value=".thread">thread</label>
+                            <label><input type="checkbox" value=".comm">comm</label>
+                            <label><input type="checkbox" value=".social">social media</label>
+                            <label><input type="checkbox" value=".one-shot">one-shot</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracker--content">
+                    <div id="tracker--rows" class="tracker--threads"><div class="grid-sizer"></div></div>
+                </div>
+            </div>
+            <script>
+                //set overall variables
+                let sheet = `https://opensheet.elk.sh/1KDKs6Kh7dXd9V3Vgcw9ipLPiaDsUqiyRPNGYw7wFnsQ/Threads`;
+                const site = 'Godly Behaviour';
+                const siteURL = 'https://godlybehaviour.jcink.net';
+                let threads = [];
+                var filters = {};
+
+                //set class variables
+                let $container = $('#tracker--rows');
+                let typeSearch = `#quicksearch`;
+                let threadTitle = `.thread--title`;
+                let visible = `is-visible`;
+                let filterGroup = `.tracker--filter-group`;
+                let filterOptions = `.tracker--filter-group input`;
+                let sorts = `.tracker--header button`;
+                let gridItem = `.grid-item`;
+                let defaultShow = `.thread:not(.complete)`;
+
+                fetch(sheet)
+                .then((response) => response.json())
+                .then((data) => {
+                    let threads = data.filter(item => item.Site === site);
+                    populatePage(threads);
+                }).then(() => {
+                    initIsotope();
+                });
+            </script>
+        </section>
+    </body>
+</html>
