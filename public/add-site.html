@@ -69,61 +69,21 @@
             </ul>
         </nav>
         <section>
-            <form id="add-thread">
+            <form id="add-site">
                 <label class="fullWidth">
-                    <b>Title</b>
-                    <input required type="text" id="title" />
+                    <b>Name</b>
+                    <input required type="text" id="name" />
                 </label>
                 <label>
-                    <b>Site</b>
-                    <select required id="site">
+                    <b>Base URL</b>
+                    <input required type="text" id="url" />
+                </label>
+                <label>
+                    <b>Directory Hook</b>
+                    <select required id="directory">
                         <option value="">(select)</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Character</b>
-                    <select required id="character">
-                        <option value="">(select)</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Partner</b>
-                    <select required id="partner">
-                        <option value="">(select)</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Featuring</b>
-                    <select required id="featuring">
-                        <option value="">(select)</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Thread ID</b>
-                    <input required type="text" id="id" />
-                </label>
-                <label>
-                    <b>IC Date</b>
-                    <input required type="date" id="date" />
-                </label>
-                <label>
-                    <b>Status</b>
-                    <select required id="status">
-                        <option value="">(select)</option>
-                        <option value="mine">Mine</option>
-                        <option value="theirs">Theirs</option>
-                        <option value="planned">Planned</option>
-                        <option value="complete">Complete</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Type</b>
-                    <select required id="type">
-                        <option value="">(select)</option>
-                        <option value="thread">Thread</option>
-                        <option value="comm">Comm</option>
-                        <option value="social">Social Media</option>
-                        <option value="one-shot">One-shot</option>
+                        <option value="?showuser=">Profile</option>
+                        <option value="?showtopic=">Topic</option>
                     </select>
                 </label>
                 <button type="submit" class="fullWidth">Submit</button>

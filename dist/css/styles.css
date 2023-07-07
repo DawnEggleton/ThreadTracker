@@ -49,6 +49,14 @@ nav {
     nav a.current, nav a:hover {
       border-bottom: 3px solid var(--text-on-accent);
       padding: 0 5px; }
+    nav a.highlight {
+      background: var(--bg-body);
+      padding: 8px 10px 5px;
+      border-radius: 2px;
+      color: var(--text-body);
+      border: none; }
+      nav a.highlight + ul {
+        margin-top: 5px; }
   nav > ul {
     display: -webkit-box;
     display: -webkit-flex;
@@ -70,10 +78,10 @@ nav {
               flex-direction: column;
       position: absolute;
       list-style-type: none;
-      padding: 0;
+      padding: 10px 0;
       margin: 0;
       width: 200px;
-      background: transparent;
+      background: var(--bg-accent);
       -webkit-flex-wrap: wrap;
           -ms-flex-wrap: wrap;
               flex-wrap: wrap;
@@ -83,18 +91,16 @@ nav {
         display: -webkit-flex;
         display: -ms-flexbox;
         display: flex; }
-      nav > ul li > ul > li:first-child {
-        margin-top: 25px; }
       nav > ul li > ul > li a {
         display: block;
         background: var(--accent);
         border-radius: 10px;
-        padding: 3px 8px;
+        padding: 10px;
         font-weight: 100;
         font-family: var(--font-body); }
         nav > ul li > ul > li a:hover {
           border: none;
-          padding: 3px 8px 3px 13px; }
+          padding: 10px 10px 10px 15px; }
     nav > ul li:hover > ul {
       display: -webkit-box;
       display: -webkit-flex;

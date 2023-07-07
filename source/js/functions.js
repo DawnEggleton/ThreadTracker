@@ -87,7 +87,6 @@ function sendAjax(data, form = null) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log('error');
-            document.querySelector('.form--sort-warning').innerHTML = `Whoops! The sheet connection didn't quite work. Please refresh the page and try again! If this persists, please open the console (ctrl + shift + J) and send Lux a screenshot of what's there.`;
         },
         complete: function () {
             console.log('complete');
@@ -400,4 +399,145 @@ function prepThreads(data, site) {
         }
     });
     return threads;
+}
+function fillThreadForm(siteData, characterData, featureData, form) {
+    fillSiteSelect(siteData, form);
+    let characterList = document.querySelector('#character');
+    let partnerList = document.querySelector('#partner');
+    let featureList = document.querySelector('#featuring');
+
+    siteList.addEventListener('change', e => {
+        let siteName = e.currentTarget.options[e.currentTarget.selectedIndex].value;
+        let characters = characterData.filter(item => item.Site === siteName);
+        let partners = featureData.filter(item => item.Site === siteName);
+        let uniquePartners = [];
+        partners.forEach(partner => {
+            let partnerObject = {
+                'partner': partner.Writer,
+                'partnerID': partner.WriterID
+            };
+            let inArray = false;
+            uniquePartners.forEach(unique => {
+                if(unique.partner === partnerObject.partner) {
+                    inArray = true;
+                }
+            });
+            if (!inArray) {
+                uniquePartners.push(partnerObject);
+            }
+        });
+
+        characters.sort((a, b) => {
+            if (a.Character < b.Character) {
+                return -1;
+            } else if (a.Character > b.Character) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        uniquePartners.sort((a, b) => {
+            if (a.Character < b.Character) {
+                return -1;
+            } else if (a.Character > b.Character) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        let characterHTML = characters.map(item => `<option value="${item.CharacterID}">${item.Character}</option>`);
+        characterList.insertAdjacentHTML('beforeend', characterHTML);
+        let partnerHTML = uniquePartners.map(item => `<option value="${item.partnerID}">${item.partner}</option>`);
+        partnerList.insertAdjacentHTML('beforeend', partnerHTML);
+    });
+
+    partnerList.addEventListener('change', e => {
+        let siteName = siteList.options[siteList.selectedIndex].value;
+        let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText;
+        let featureOptions = featureData.filter(item => item.Site === siteName && item.Writer === partnerName);
+        console.log(partnerName);
+        console.log(featureOptions);
+        featureOptions.sort((a, b) => {
+            if (a.Character < b.Character) {
+                return -1;
+            } else if (a.Character > b.Character) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        let featureHTML = featureOptions.map(item => `<option value="${item.CharacterID}">${item.Character}</option>`);
+        featureList.insertAdjacentHTML('beforeend', featureHTML);
+    });
+}
+function fillSiteSelect(siteData, form) {
+    let siteList = form.querySelector('#site');
+    siteData.sort((a, b) => {
+        if (a.Site < b.Site) {
+            return -1;
+        } else if (a.Site > b.Site) {
+            return 1;
+        } else {
+            return 0;
+        }
+    })
+
+    let siteHTML = siteData.map(item => `<option value="${item.Site}">${item.Site}</option>`);
+    siteList.insertAdjacentHTML('beforeend', siteHTML);
+}
+function addCharacter(e) {
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
+        character = e.currentTarget.querySelector('#character').value,
+        characterID = e.currentTarget.querySelector('#id').value;
+
+    sendAjax({
+        'SubmissionType': 'new-character',
+        'Site': site,
+        'Character': character,
+        'CharacterID': characterID
+    }, e);
+}
+function addSite(e) {
+    let directory = e.currentTarget.querySelector('#directory').options[e.currentTarget.querySelector('#directory').selectedIndex].value,
+        url = e.currentTarget.querySelector('#url').value,
+        site = e.currentTarget.querySelector('#name').value;
+
+    sendAjax({
+        'SubmissionType': 'new-site',
+        'Site': site,
+        'URL': url,
+        'Directory': directory
+    }, e);
+}
+function partnerCheck(featureData, form) {
+    let partnerField = form.querySelector('#writer');
+    partnerField.addEventListener('keyup', e => {
+        let siteName = form.querySelector('#site').options[form.querySelector('#site').selectedIndex].value;
+        let activePartner = partnerField.value;
+        let partner = featureData.filter(item => item.Site === siteName && item.Writer.toLowerCase() === activePartner.toLowerCase())[0];
+        if(partner) {
+            form.querySelector('#writerID').value = partner.WriterID;
+        } else {
+            form.querySelector('#writerID').value = '';
+        }
+    });
+
+}
+function addPartner(e) {
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
+        character = e.currentTarget.querySelector('#character').value,
+        characterID = e.currentTarget.querySelector('#characterID').value,
+        writerID = e.currentTarget.querySelector('#writerID').value,
+        writer = e.currentTarget.querySelector('#writer').value;
+
+    sendAjax({
+        'SubmissionType': 'new-partner',
+        'Site': site,
+        'Character': character,
+        'CharacterID': characterID,
+        'Writer': writer,
+        'WriterID': writerID
+    }, e);
 }

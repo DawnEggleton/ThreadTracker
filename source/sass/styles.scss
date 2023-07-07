@@ -56,6 +56,18 @@ nav {
             border-bottom: 3px solid var(--text-on-accent);
             padding: 0 5px;
         }
+
+        &.highlight {
+            background: var(--bg-body);
+            padding: 8px 10px 5px;
+            border-radius: 2px;
+            color: var(--text-body);
+            border: none;
+
+            & + ul {
+                margin-top: 5px;
+            }
+        }
     }
 
     & > ul {
@@ -72,10 +84,10 @@ nav {
                 flex-direction: column;
                 position: absolute;
                 list-style-type: none;
-                padding: 0;
+                padding: 10px 0;
                 margin: 0;
                 width: 200px;
-                background: transparent;
+                background: var(--bg-accent);
                 flex-wrap: wrap;
                 gap: 5px;
 
@@ -84,20 +96,17 @@ nav {
                 }
 
                 & > li {
-                    &:first-child {
-                        margin-top: 25px;
-                    }
                     a {
                         display: block;
                         background: var(--accent);
                         border-radius: 10px;
-                        padding: 3px 8px;
+                        padding: 10px;
                         font-weight: 100;
                         font-family: var(--font-body);
 
                         &:hover {
                             border: none;
-                            padding: 3px 8px 3px 13px;
+                            padding: 10px 10px 10px 15px;
                         }
                     }
                 }
