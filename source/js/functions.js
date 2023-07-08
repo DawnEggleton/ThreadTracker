@@ -402,6 +402,7 @@ function prepThreads(data, site) {
 }
 function fillThreadForm(siteData, characterData, featureData, form) {
     fillSiteSelect(siteData, form);
+    let siteList = form.querySelector('#site');
     let characterList = document.querySelector('#character');
     let partnerList = document.querySelector('#partner');
     let featureList = document.querySelector('#featuring');
