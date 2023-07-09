@@ -63,7 +63,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
         <a class="thread--character" href="${siteURL}/?showuser=${character.split('#')[1]}">${character.split('#')[0]}</a>
         <a href="${siteURL}/?showtopic=${threadID}&view=getnewpost" target="_blank" class="thread--title">${title}</a>
         <span class="thread--feature">ft. <a href="${siteURL}/?showuser=${feature.split('#')[1]}">${feature.split('#')[0]}</a></span>
-        <span class="thread--partners">Writing with <a href="${siteURL}/${directoryString}${partner.split('#')[1]}">${feature.split('#')[0]}</a></span>
+        <span class="thread--partners">Writing with <a href="${siteURL}/${directoryString}${partner.split('#')[1]}">${partner.split('#')[0]}</a></span>
         <span class="thread--ic-date">Set <span>${icDate}</span></span>
         <span class="thread--last-post">Last Active <span>${lastPost}</span></span>
         <div class="thread--buttons">
@@ -140,7 +140,7 @@ function markComplete(e) {
 }
 function addThread(e) {
     let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
-        status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#site').selectedIndex].innerText,
+        status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#status').selectedIndex].innerText,
         character = `${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].      innerText}#${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].value}`,
         featuring = `${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].innerText}#${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].value}`,
         title = e.currentTarget.querySelector('#title').value,
