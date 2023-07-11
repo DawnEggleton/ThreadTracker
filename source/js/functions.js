@@ -109,7 +109,7 @@ function changeStatus(e) {
             'Site': e.dataset.site,
             'Status': 'Theirs'
         });
-    } else if(e.dataset.status === 'theirs' || e.dataset.status === 'expected') {
+    } else if(e.dataset.status === 'theirs' || e.dataset.status === 'planned') {
         e.dataset.status = 'mine';
         let thread = e.parentNode.parentNode.parentNode;
         thread.classList.remove('status--theirs');
@@ -139,15 +139,15 @@ function markComplete(e) {
     });
 }
 function addThread(e) {
-    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
-        status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#status').selectedIndex].innerText,
-        character = `${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].      innerText}#${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].value}`,
-        featuring = `${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].innerText}#${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].value}`,
-        title = e.currentTarget.querySelector('#title').value,
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
+        status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#status').selectedIndex].innerText.toLowerCase().trim(),
+        character = `${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].innerText}#${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].value}`.toLowerCase().trim(),
+        featuring = `${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].innerText}#${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].value}`.toLowerCase().trim(),
+        title = e.currentTarget.querySelector('#title').value.toLowerCase().trim(),
         threadID = e.currentTarget.querySelector('#id').value,
         icDate = e.currentTarget.querySelector('#date').value,
-        partner = `${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].innerText}#${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].value}`,
-        type = e.currentTarget.querySelector('#type').options[e.currentTarget.querySelector('#type').selectedIndex].innerText,
+        partner = `${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].innerText}#${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].value}`.toLowerCase().trim(),
+        type = e.currentTarget.querySelector('#type').options[e.currentTarget.querySelector('#type').selectedIndex].innerText.toLowerCase().trim(),
         year = new Date().getFullYear(),
         month = getMonthName(new Date().getMonth()),
         day = new Date().getDate(),
@@ -374,7 +374,7 @@ function initIsotope() {
     });
 }
 function prepThreads(data, site) {
-    let threads = data.filter(item => item.Site === site);
+    let threads = data.filter(item => item.Site.toLowerCase().trim() === site.toLowerCase().trim());
     threads.sort((a, b) => {
         let aStatus = a.Status.toLowerCase() === 'complete' ? 1 : 0;
         let bStatus = b.Status.toLowerCase() === 'complete' ? 1 : 0;
@@ -408,13 +408,13 @@ function fillThreadForm(siteData, characterData, featureData, form) {
     let featureList = document.querySelector('#featuring');
 
     siteList.addEventListener('change', e => {
-        let siteName = e.currentTarget.options[e.currentTarget.selectedIndex].value;
-        let characters = characterData.filter(item => item.Site === siteName);
-        let partners = featureData.filter(item => item.Site === siteName);
+        let siteName = e.currentTarget.options[e.currentTarget.selectedIndex].value.toLowerCase().trim();
+        let characters = characterData.filter(item => item.Site.toLowerCase().trim() === siteName);
+        let partners = featureData.filter(item => item.Site.toLowerCase().trim() === siteName);
         let uniquePartners = [];
         partners.forEach(partner => {
             let partnerObject = {
-                'partner': partner.Writer,
+                'partner': partner.Writer.toLowerCase().trim(),
                 'partnerID': partner.WriterID
             };
             let inArray = false;
@@ -447,18 +447,16 @@ function fillThreadForm(siteData, characterData, featureData, form) {
             }
         });
 
-        let characterHTML = characters.map(item => `<option value="${item.CharacterID}">${item.Character}</option>`);
+        let characterHTML = characters.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
         characterList.insertAdjacentHTML('beforeend', characterHTML);
-        let partnerHTML = uniquePartners.map(item => `<option value="${item.partnerID}">${item.partner}</option>`);
+        let partnerHTML = uniquePartners.map(item => `<option value="${item.partnerID}">${capitalize(item.partner)}</option>`);
         partnerList.insertAdjacentHTML('beforeend', partnerHTML);
     });
 
     partnerList.addEventListener('change', e => {
-        let siteName = siteList.options[siteList.selectedIndex].value;
-        let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText;
-        let featureOptions = featureData.filter(item => item.Site === siteName && item.Writer === partnerName);
-        console.log(partnerName);
-        console.log(featureOptions);
+        let siteName = siteList.options[siteList.selectedIndex].value.toLowerCase().trim();
+        let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText.toLowerCase().trim();
+        let featureOptions = featureData.filter(item => item.Site.toLowerCase().trim() === siteName && item.Writer.toLowerCase().trim() === partnerName);
         featureOptions.sort((a, b) => {
             if (a.Character < b.Character) {
                 return -1;
@@ -469,7 +467,7 @@ function fillThreadForm(siteData, characterData, featureData, form) {
             }
         });
 
-        let featureHTML = featureOptions.map(item => `<option value="${item.CharacterID}">${item.Character}</option>`);
+        let featureHTML = featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
         featureList.insertAdjacentHTML('beforeend', featureHTML);
     });
 }
@@ -485,12 +483,12 @@ function fillSiteSelect(siteData, form) {
         }
     })
 
-    let siteHTML = siteData.map(item => `<option value="${item.Site}">${item.Site}</option>`);
+    let siteHTML = siteData.map(item => `<option value="${item.Site}">${capitalize(item.Site)}</option>`);
     siteList.insertAdjacentHTML('beforeend', siteHTML);
 }
 function addCharacter(e) {
-    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
-        character = e.currentTarget.querySelector('#character').value,
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
+        character = e.currentTarget.querySelector('#character').value.toLowerCase().trim(),
         characterID = e.currentTarget.querySelector('#id').value;
 
     sendAjax({
@@ -501,9 +499,9 @@ function addCharacter(e) {
     }, e);
 }
 function addSite(e) {
-    let directory = e.currentTarget.querySelector('#directory').options[e.currentTarget.querySelector('#directory').selectedIndex].value,
-        url = e.currentTarget.querySelector('#url').value,
-        site = e.currentTarget.querySelector('#name').value;
+    let directory = e.currentTarget.querySelector('#directory').options[e.currentTarget.querySelector('#directory').selectedIndex].value.trim(),
+        url = e.currentTarget.querySelector('#url').value.trim(),
+        site = e.currentTarget.querySelector('#name').value.toLowerCase().trim();
 
     sendAjax({
         'SubmissionType': 'new-site',
@@ -515,9 +513,9 @@ function addSite(e) {
 function partnerCheck(featureData, form) {
     let partnerField = form.querySelector('#writer');
     partnerField.addEventListener('keyup', e => {
-        let siteName = form.querySelector('#site').options[form.querySelector('#site').selectedIndex].value;
-        let activePartner = partnerField.value;
-        let partner = featureData.filter(item => item.Site === siteName && item.Writer.toLowerCase() === activePartner.toLowerCase())[0];
+        let siteName = form.querySelector('#site').options[form.querySelector('#site').selectedIndex].value.toLowerCase().trim();
+        let activePartner = partnerField.value.toLowerCase().trim();
+        let partner = featureData.filter(item => item.Site.toLowerCase().trim() === siteName && item.Writer.toLowerCase() === activePartner.toLowerCase())[0];
         if(partner) {
             form.querySelector('#writerID').value = partner.WriterID;
         } else {
@@ -527,11 +525,11 @@ function partnerCheck(featureData, form) {
 
 }
 function addPartner(e) {
-    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value,
-        character = e.currentTarget.querySelector('#character').value,
+    let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
+        character = e.currentTarget.querySelector('#character').value.toLowerCase().trim(),
         characterID = e.currentTarget.querySelector('#characterID').value,
         writerID = e.currentTarget.querySelector('#writerID').value,
-        writer = e.currentTarget.querySelector('#writer').value;
+        writer = e.currentTarget.querySelector('#writer').value.toLowerCase().trim();
 
     sendAjax({
         'SubmissionType': 'new-partner',
@@ -541,4 +539,26 @@ function addPartner(e) {
         'Writer': writer,
         'WriterID': writerID
     }, e);
+}
+function fixMc(str) {
+    return (""+str).replace(/Mc(.)/g, function(m, m1) {
+        return 'Mc' + m1.toUpperCase();
+    });
+}
+function fixMac(str) {
+    return (""+str).replace(/Mac(.)/g, function(m, m1) {
+        return 'Mac' + m1.toUpperCase();
+    });
+}
+function capitalize(str, separators = [` `, `'`, `-`]) {
+    separators = separators || [ ' ' ];
+    var regex = new RegExp('(^|[' + separators.join('') + '])(\\w)', 'g');
+    let first = str.split(' ')[0].replace(regex, function(x) { return x.toUpperCase(); });
+    let last = fixMac(fixMc(str.split(' ').slice(1).join(' ').replace(regex, function(x) { return x.toUpperCase(); })));
+    return `${first} ${last}`;
+}
+function capitalizeMultiple(selector) {
+    document.querySelectorAll(selector).forEach(character => {
+        character.innerText = capitalize(character.innerText);
+    });
 }

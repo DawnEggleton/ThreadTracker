@@ -146,7 +146,7 @@
                     fetch(`${sheet}/Sites`)
                     .then((response) => response.json())
                     .then((siteData) => {
-                        let siteObject = siteData.filter(item => item.Site === siteName)[0];
+                        let siteObject = siteData.filter(item => item.Site.toLowerCase().trim() === siteName.toLowerCase().trim())[0];
                         let threads = prepThreads(threadData, siteObject.Site);
                         populatePage(threads, siteObject);
                     }).then(() => {
