@@ -227,7 +227,7 @@ function debounce(fn, threshold) {
 }
 function setCustomFilter() {
     const hideUnless = document.querySelector('.completed-label');
-    
+
     //get search value
     qsRegex = document.querySelector(typeSearch).value;
     elements = document.querySelectorAll(gridItem);
@@ -314,6 +314,9 @@ function setCustomFilter() {
         filter = filter.join(', ');
     } else {
         filter = filter.map(item => `${item}${defaultShow}`);
+        if(filter.length === 0) {
+            filter = [defaultShow];
+        }
         filter = filter.join(', ');
     }
     
