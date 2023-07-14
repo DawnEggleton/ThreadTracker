@@ -8,7 +8,7 @@ const filterGroup = `.tracker--filter-group`;
 const filterOptions = `.tracker--filter-group input`;
 const sorts = `.tracker--header button`;
 const gridItem = `.grid-item`;
-const defaultShow = `.thread:not(.complete)`;
+const defaultShow = `:not(.status--complete)`;
 
 let threadForm = document.querySelector('#add-thread');
 if(threadForm) {

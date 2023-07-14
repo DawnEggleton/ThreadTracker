@@ -226,6 +226,8 @@ function debounce(fn, threshold) {
     };
 }
 function setCustomFilter() {
+    const hideUnless = document.querySelector('.completed-label');
+    
     //get search value
     qsRegex = document.querySelector(typeSearch).value;
     elements = document.querySelectorAll(gridItem);
@@ -247,7 +249,6 @@ function setCustomFilter() {
 
     let filterGroups = document.querySelectorAll(filterGroup);
     let groups = [];
-    let checkFilters;
     filterGroups.forEach(group => {
         let filters = [];
         group.querySelectorAll('label.is-checked input').forEach(filter => {
@@ -309,7 +310,12 @@ function setCustomFilter() {
     }
 
     //join array into string
-    filter = filter.join(', ');
+    if(hideUnless.classList.contains('is-checked')) {
+        filter = filter.join(', ');
+    } else {
+        filter = filter.map(item => `${item}${defaultShow}`);
+        filter = filter.join(', ');
+    }
     
     //render isotope
     $container.isotope({
