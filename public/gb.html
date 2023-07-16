@@ -114,6 +114,7 @@
                             <label class="all is-checked"><input type="checkbox" class="all" value="" checked="">all</label>
                             <label><input type="checkbox" value=".status--mine">my turn</label>
                             <label><input type="checkbox" value=".status--theirs">their turn</label>
+                            <label><input type="checkbox" value=".status--start">to start</label>
                             <label><input type="checkbox" value=".status--planned">planned</label>
                             <label class="completed-label"><input type="checkbox" value=".status--complete">completed</label>
                         </div>
@@ -173,8 +174,8 @@
                         sortAscending: {
                             character: true,
                             title: true,
-                            icdate: true,
-                            lastpost: false,
+                            icdate: false,
+                            lastpost: true,
                         }
                     });
                     setTimeout(function() {
