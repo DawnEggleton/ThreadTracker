@@ -456,10 +456,12 @@ function fillThreadForm(siteData, characterData, featureData, form) {
             }
         });
 
-        let characterHTML = characters.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
-        characterList.insertAdjacentHTML('beforeend', characterHTML);
-        let partnerHTML = uniquePartners.map(item => `<option value="${item.partnerID}">${capitalize(item.partner)}</option>`);
-        partnerList.insertAdjacentHTML('beforeend', partnerHTML);
+        let characterHTML = `<option value="">(select)</option>`;
+        let partnerHTML = `<option value="">(select)</option>`;
+        characterHTML += characters.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
+        characterList.innerHTML = characterHTML;
+        partnerHTML += uniquePartners.map(item => `<option value="${item.partnerID}">${capitalize(item.partner)}</option>`);
+        partnerList.innerHTML = partnerHTML;
     });
 
     partnerList.addEventListener('change', e => {
@@ -476,8 +478,9 @@ function fillThreadForm(siteData, characterData, featureData, form) {
             }
         });
 
-        let featureHTML = featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
-        featureList.insertAdjacentHTML('beforeend', featureHTML);
+        let featureHTML = `<option value="">(select)</option>`;
+        featureHTML += featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
+        featureList.innerHTML = featureHTML;
     });
 }
 function fillSiteSelect(siteData, form) {
@@ -492,8 +495,9 @@ function fillSiteSelect(siteData, form) {
         }
     })
 
-    let siteHTML = siteData.map(item => `<option value="${item.Site}">${capitalize(item.Site)}</option>`);
-    siteList.insertAdjacentHTML('beforeend', siteHTML);
+    let siteHTML = `<option value="">(select)</option>`;
+    siteHTML += siteData.map(item => `<option value="${item.Site}">${capitalize(item.Site)}</option>`);
+    siteList.innerHTML = siteHTML;
 }
 function addCharacter(e) {
     let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
