@@ -379,6 +379,20 @@ main {
 .thread--ic-date, .thread--last-post {
   text-align: right; }
 
+.tracker.charts {
+  display: -ms-grid;
+  display: grid;
+  grid-gap: 15px; }
+  @media only screen and (min-width: 768px) {
+    .tracker.charts {
+      -ms-grid-columns: (1fr)[2];
+      grid-template-columns: repeat(2, 1fr); } }
+  .tracker.charts .chart {
+    max-width: 97vw; }
+    @media only screen and (min-width: 768px) {
+      .tracker.charts .chart {
+        max-width: calc(97vw / 2); } }
+
 .tracker--header {
   position: -webkit-sticky;
   position: sticky;

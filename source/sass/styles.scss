@@ -410,6 +410,22 @@ main {
 }
 
 .tracker {
+    &.charts {
+        display: grid;
+        grid-gap: 15px;
+
+        @media only screen and (min-width: $md) {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .chart {
+            max-width: 97vw;
+
+            @media only screen and (min-width: $md) {
+                max-width: calc(97vw / 2);
+            }
+        }
+    }
     &--header {
         position: sticky;
         top: 69px;
