@@ -58,12 +58,46 @@ function getDelay(date) {
     }
     return delayClass;
 }
-function formatThread(site, siteURL, status, character, feature, title, threadID, icDate, partner, type, lastPost, delayClass, directoryString) {
-    let html = `<div class="thread lux-track grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} partner--${partner.split('#')[0].replace(' ', '')} grid-item"><div class="thread--wrap">
+function formatThread(site, siteURL, status, character, feature, title, threadID, icDate, partnerObjects, type, lastPost, delayClass, directoryString) {
+    //set writing partners
+    let partners = ``;
+    let partnerClasses = ``;
+    partnerObjects.forEach((partner, i) => {
+        if(partnerObjects.length === (i + 1)) {
+            partners += ` and `;
+        } else if(i !== 0) {
+            partners += ` `;
+            partnerClasses += ` `;
+        }
+        partners += `<a href="${siteURL}/${directoryString}${partner.id.toLowerCase().trim()}">${partner.partner.toLowerCase().trim()}</a>`;
+        partnerClasses += `partner--${partner.partner.toLowerCase().trim().replaceAll(' ', '')}`;
+        if(partnerObjects.length !== (i + 1)) {
+            partnerClasses += ` `;
+            if(partnerObjects.length !== 2) {
+                partners += `,`;
+            }
+        }
+    });
+
+    //set featured characters
+    let featuring = ``;
+    let ftObjects = feature.split('+').length > 1 ? feature.split('+').map(character => JSON.parse(character)) : [];
+    ftObjects.forEach((character, i) => {
+        if(ftObjects.length === (i + 1)) {
+            featuring += ` and `;
+        } else if(i !== 0) {
+            featuring += ` `;
+        }
+        featuring += `<a href="${siteURL}/?showuser=${character.id.toLowerCase().trim()}">${character.character.toLowerCase().trim()}</a>`;
+        if(ftObjects.length !== (i + 1) && ftObjects.length !== 2) {
+            featuring += `,`;
+        }
+    });
+    let html = `<div class="thread lux-track grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} ${partnerClasses} grid-item"><div class="thread--wrap">
         <a class="thread--character" href="${siteURL}/?showuser=${character.split('#')[1]}">${character.split('#')[0]}</a>
         <a href="${siteURL}/?showtopic=${threadID}&view=getnewpost" target="_blank" class="thread--title">${title}</a>
-        <span class="thread--feature">ft. <a href="${siteURL}/?showuser=${feature.split('#')[1]}">${feature.split('#')[0]}</a></span>
-        <span class="thread--partners">Writing with <a href="${siteURL}/${directoryString}${partner.split('#')[1]}">${partner.split('#')[0]}</a></span>
+        <span class="thread--feature">ft. ${featuring}</span>
+        <span class="thread--partners">Writing with ${partners}</span>
         <span class="thread--ic-date">Set <span>${icDate}</span></span>
         <span class="thread--last-post">Last Active <span>${lastPost}</span></span>
         <div class="thread--buttons">
@@ -167,6 +201,9 @@ function addThread(e) {
         'LastUpdated': update
     }, e);
 }
+function parsePartners() {
+
+}
 function populatePage(array, siteObject) {
     let html = ``;
     let characters = [], partners = [];
@@ -174,14 +211,16 @@ function populatePage(array, siteObject) {
     for (let i = 0; i < array.length; i++) {
         //Make Character Array
         let character = array[i].Character.toLowerCase();
-        let partner = array[i].Partner.toLowerCase();
+        let partnerObjects = array[i].Partner.split('+').length > 1 ? array[i].Partner.split('+').map(partner => JSON.parse(partner)) : [];
 
         if(jQuery.inArray(character, characters) == -1 && character != '') {
             characters.push(character);
         }
-        if(jQuery.inArray(partner, partners) == -1 && partner != '') {
-            partners.push(partner);
-        }
+        partnerObjects.forEach(partner => {
+            if(jQuery.inArray(partner.partner, partners) == -1 && partner.partner != '') {
+                partners.push(partner.partner);
+            }
+        });
 
         html += formatThread(siteObject.Site,
                             siteObject.URL,
@@ -191,7 +230,7 @@ function populatePage(array, siteObject) {
                             array[i].Title.toLowerCase(),
                             array[i].ThreadID,
                             array[i].ICDate.toLowerCase(),
-                            array[i].Partner.toLowerCase(),
+                            partnerObjects,
                             array[i].Type.toLowerCase(),
                             array[i].LastUpdated.toLowerCase(),
                             getDelay(array[i].LastUpdated),
@@ -208,7 +247,7 @@ function populatePage(array, siteObject) {
         document.querySelector('.tracker--characters').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".${character.split(' ')[0]}"/>${character.split(' ')[0]}</label>`);
     });
     partners.forEach(partner => {
-        document.querySelector('.tracker--partners').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".partner--${partner.split('#')[0].replace(' ', '')}"/>${partner.split('#')[0]}</label>`);
+        document.querySelector('.tracker--partners').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".partner--${partner.split('#')[0].replaceAll(' ', '')}"/>${partner.split('#')[0]}</label>`);
     });
 }
 function debounce(fn, threshold) {
