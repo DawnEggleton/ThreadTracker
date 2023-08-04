@@ -479,6 +479,15 @@ form {
     form {
       -ms-grid-columns: (1fr)[2];
       grid-template-columns: repeat(2, 1fr); } }
+  form #clip-partners {
+    grid-column: 1 / -1;
+    display: -ms-grid;
+    display: grid;
+    gap: 15px; }
+    @media only screen and (min-width: 768px) {
+      form #clip-partners {
+        -ms-grid-columns: (1fr)[2];
+        grid-template-columns: repeat(2, 1fr); } }
   form .fullWidth {
     grid-column: 1 / -1; }
   form label {

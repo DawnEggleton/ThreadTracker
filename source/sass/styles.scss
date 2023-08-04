@@ -516,6 +516,16 @@ form {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    #clip-partners {
+        grid-column: 1 / -1;
+        display: grid;
+        gap: 15px;
+    
+        @media only screen and (min-width: $md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     .fullWidth {
         grid-column: 1 / -1;
     }

@@ -176,16 +176,36 @@ function addThread(e) {
     let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
         status = e.currentTarget.querySelector('#status').options[e.currentTarget.querySelector('#status').selectedIndex].innerText.toLowerCase().trim(),
         character = `${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].innerText.toLowerCase().trim()}#${e.currentTarget.querySelector('#character').options[e.currentTarget.querySelector('#character').selectedIndex].value.toLowerCase().trim()}`,
-        featuring = `${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].innerText.toLowerCase().trim()}#${e.currentTarget.querySelector('#featuring').options[e.currentTarget.querySelector('#featuring').selectedIndex].value.toLowerCase().trim()}`,
         title = e.currentTarget.querySelector('#title').value.toLowerCase().trim(),
         threadID = e.currentTarget.querySelector('#id').value,
         icDate = e.currentTarget.querySelector('#date').value,
-        partner = `${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].innerText.toLowerCase().trim()}#${e.currentTarget.querySelector('#partner').options[e.currentTarget.querySelector('#partner').selectedIndex].value.toLowerCase().trim()}`,
         type = e.currentTarget.querySelector('#type').options[e.currentTarget.querySelector('#type').selectedIndex].innerText.toLowerCase().trim(),
         year = new Date().getFullYear(),
         month = getMonthName(new Date().getMonth()),
         day = new Date().getDate(),
         update = `${month} ${day}, ${year}`;
+
+        let partners = document.querySelectorAll('.partner select');
+        let partnerObjects = [];
+        partners.forEach(partnerObj => {
+            let partner = {
+                partner: partnerObj.options[partnerObj.selectedIndex].innerText.toLowerCase().trim(),
+                id: partnerObj.options[partnerObj.selectedIndex].value.toLowerCase().trim()
+            }
+            partnerObjects.push(JSON.stringify(partner));
+        });
+        let partner = partnerObjects.join('+');
+
+        let featured = document.querySelectorAll('.featuring select');
+        let ftObjects = [];
+        featured.forEach(ftObj => {
+            let feature = {
+                character: ftObj.options[ftObj.selectedIndex].innerText.toLowerCase().trim(),
+                id: ftObj.options[ftObj.selectedIndex].value.toLowerCase().trim()
+            }
+            ftObjects.push(JSON.stringify(feature));
+        });
+        let featuring = ftObjects.join('+');
 
     sendAjax({
         'SubmissionType': 'new-thread',
@@ -201,9 +221,6 @@ function addThread(e) {
         'LastUpdated': update
     }, e);
 }
-function parsePartners() {
-
-}
 function populatePage(array, siteObject) {
     let html = ``;
     let characters = [], partners = [];
@@ -211,7 +228,7 @@ function populatePage(array, siteObject) {
     for (let i = 0; i < array.length; i++) {
         //Make Character Array
         let character = array[i].Character.toLowerCase();
-        let partnerObjects = array[i].Partner.split('+').length > 1 ? array[i].Partner.split('+').map(partner => JSON.parse(partner)) : [];
+        let partnerObjects = array[i].Partner.split('+').map(partner => JSON.parse(partner));
 
         if(jQuery.inArray(character, characters) == -1 && character != '') {
             characters.push(character);
@@ -452,8 +469,7 @@ function fillThreadForm(siteData, characterData, featureData, form) {
     let siteList = form.querySelector('#site');
     fillSiteSelect(siteData, form);
     let characterList = document.querySelector('#character');
-    let partnerList = document.querySelector('#partner');
-    let featureList = document.querySelector('#featuring');
+    let partnerLists = document.querySelectorAll('.partner select');
 
     siteList.addEventListener('change', e => {
         let siteName = e.currentTarget.options[e.currentTarget.selectedIndex].value.toLowerCase().trim();
@@ -500,26 +516,30 @@ function fillThreadForm(siteData, characterData, featureData, form) {
         characterHTML += characters.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
         characterList.innerHTML = characterHTML;
         partnerHTML += uniquePartners.map(item => `<option value="${item.partnerID}">${capitalize(item.partner)}</option>`);
-        partnerList.innerHTML = partnerHTML;
+        partnerLists = document.querySelectorAll('.partner select');
+        partnerLists.forEach(partnerList => partnerList.innerHTML = partnerHTML);
     });
 
-    partnerList.addEventListener('change', e => {
-        let siteName = siteList.options[siteList.selectedIndex].value.toLowerCase().trim();
-        let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText.toLowerCase().trim();
-        let featureOptions = featureData.filter(item => item.Site.toLowerCase().trim() === siteName && item.Writer.toLowerCase().trim() === partnerName);
-        featureOptions.sort((a, b) => {
-            if (a.Character < b.Character) {
-                return -1;
-            } else if (a.Character > b.Character) {
-                return 1;
-            } else {
-                return 0;
-            }
+    partnerLists.forEach(partnerList => {
+        partnerList.addEventListener('change', e => {
+            let siteName = siteList.options[siteList.selectedIndex].value.toLowerCase().trim();
+            let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText.toLowerCase().trim();
+            let featureOptions = featureData.filter(item => item.Site.toLowerCase().trim() === siteName && item.Writer.toLowerCase().trim() === partnerName);
+            featureOptions.sort((a, b) => {
+                if (a.Character < b.Character) {
+                    return -1;
+                } else if (a.Character > b.Character) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+    
+            let featureHTML = `<option value="">(select)</option>`;
+            featureHTML += featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
+            let featureList = partnerList.parentNode.nextElementSibling.querySelector('select');
+            featureList.innerHTML = featureHTML;
         });
-
-        let featureHTML = `<option value="">(select)</option>`;
-        featureHTML += featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
-        featureList.innerHTML = featureHTML;
     });
 }
 function fillSiteSelect(siteData, form) {
@@ -613,4 +633,26 @@ function capitalizeMultiple(selector) {
     document.querySelectorAll(selector).forEach(character => {
         character.innerText = capitalize(character.innerText);
     });
+}
+function addPartnerFields(i) {
+    let html = `<label class="partner">
+        <b>Partner</b>
+        <select required id="partner-${i}">
+            <option value="">(select)</option>
+        </select>
+    </label>
+    <label class="featuring">
+        <b>Featuring</b>
+        <select required id="featuring-${i}">
+            <option value="">(select)</option>
+        </select>
+    </label>`;
+    return html;
+}
+function loadPartnerFields() {
+    let active = document.querySelector(`#clip-partners`);
+    let count = document.querySelector(`#partner-count`).value;
+    for(let i = 0; i < count; i++) {
+        active.insertAdjacentHTML('beforeend', addPartnerFields(i));
+    }
 }

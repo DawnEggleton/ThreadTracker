@@ -9,6 +9,9 @@ const filterOptions = `.tracker--filter-group input`;
 const sorts = `.tracker--header button`;
 const gridItem = `.grid-item`;
 const defaultShow = `:not(.status--complete)`;
+if(document.querySelectorAll('#add-thread').length > 0) {
+    loadPartnerFields();
+}
 
 let threadForm = document.querySelector('#add-thread');
 if(threadForm) {
@@ -74,5 +77,24 @@ if(partnerForm) {
                 addPartner(e);
             });
         });
+    });
+}
+
+if(document.querySelectorAll('#partner-count').length > 0) {
+    document.querySelector('#partner-count').addEventListener('change', e => {
+        let active = document.querySelector('#clip-partners');
+        let currentCount = active.querySelectorAll('.partner').length;
+        let newCount = parseInt(e.currentTarget.value);
+        if (newCount > currentCount) {
+            for(let i = currentCount; i < newCount; i++) {
+                active.insertAdjacentHTML('beforeend', addPartnerFields(i));
+            }
+        } else if (currentCount > newCount) {
+            let difference = currentCount - newCount;
+            for(let i = 0; i < difference; i++) {
+                active.querySelectorAll('.partner')[currentCount - i - 1].remove();
+                active.querySelectorAll('.featuring')[currentCount - i - 1].remove();
+            }
+        }
     });
 }

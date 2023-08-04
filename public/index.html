@@ -79,18 +79,11 @@
                         <option value="">(select)</option>
                     </select>
                 </label>
-                <label>
-                    <b>Partner</b>
-                    <select required id="partner">
-                        <option value="">(select)</option>
-                    </select>
+                <label class="fullWidth">
+                    <b>Number of Partners</b>
+                    <input type="number" value="1" min="1" id="partner-count" />
                 </label>
-                <label>
-                    <b>Featuring</b>
-                    <select required id="featuring">
-                        <option value="">(select)</option>
-                    </select>
-                </label>
+                <div id="clip-partners" class="fulWidth"></div>
                 <label>
                     <b>Thread ID</b>
                     <input required type="text" id="id" />
