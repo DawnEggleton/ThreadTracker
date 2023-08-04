@@ -1,5 +1,4 @@
 function loadThreads(data) {
-    //organize data into more accessible objects
     let threads = [];
     data.forEach(item => {
         let delayClass = getDelay(item.LastUpdated);
@@ -27,12 +26,13 @@ function loadCharts(threads) {
 }
 
 function configTime(threads) {
-    let recent = threads.filter(thread => thread.delay === 'okay').length;
-    let week = threads.filter(thread => thread.delay === 'week').length;
-    let month = threads.filter(thread => thread.delay === 'month').length;
-    let quarter = threads.filter(thread => thread.delay === 'quarter').length;
-    let half = threads.filter(thread => thread.delay === 'half').length;
-    let year = threads.filter(thread => thread.delay === 'year').length;
+    let activeThreads = threads.filter(item => item.status !== 'complete');
+    let recent = activeThreads.filter(thread => thread.delay === 'okay').length;
+    let week = activeThreads.filter(thread => thread.delay === 'week').length;
+    let month = activeThreads.filter(thread => thread.delay === 'month').length;
+    let quarter = activeThreads.filter(thread => thread.delay === 'quarter').length;
+    let half = activeThreads.filter(thread => thread.delay === 'half').length;
+    let year = activeThreads.filter(thread => thread.delay === 'year').length;
     let timeConfig = {
         series: [recent, week, month, quarter, half, year],
         labels: ['Recent', 'Over a week', 'Over a month', 'Over 3 months', 'Over 6 months', 'Over a year'],
