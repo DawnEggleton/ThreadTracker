@@ -96,5 +96,29 @@ if(document.querySelectorAll('#partner-count').length > 0) {
                 active.querySelectorAll('.featuring')[currentCount - i - 1].remove();
             }
         }
+        let partnerLists = document.querySelectorAll('.partner select');
+        partnerLists.forEach(partnerList => partnerList.innerHTML = localStorage.getItem('partnerList'));
+
+        partnerLists.forEach(partnerList => {
+            partnerList.addEventListener('change', e => {
+                let siteName = localStorage.getItem('siteName');
+                let partnerName = e.currentTarget.options[e.currentTarget.selectedIndex].innerText.toLowerCase().trim();
+                let featureOptions = JSON.parse(localStorage.getItem('featureData')).map(item => JSON.parse(item)).filter(item => item.Site.toLowerCase().trim() === siteName && item.Writer.toLowerCase().trim() === partnerName);
+                featureOptions.sort((a, b) => {
+                    if (a.Character < b.Character) {
+                        return -1;
+                    } else if (a.Character > b.Character) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+        
+                let featureHTML = `<option value="">(select)</option>`;
+                featureHTML += featureOptions.map(item => `<option value="${item.CharacterID}">${capitalize(item.Character)}</option>`);
+                let featureList = partnerList.parentNode.nextElementSibling.querySelector('select');
+                featureList.innerHTML = featureHTML;
+            });
+        });
     });
 }

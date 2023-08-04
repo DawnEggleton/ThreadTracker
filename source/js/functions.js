@@ -63,7 +63,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
     let partners = ``;
     let partnerClasses = ``;
     partnerObjects.forEach((partner, i) => {
-        if(partnerObjects.length === (i + 1)) {
+        if(partnerObjects.length === (i + 1) && partnerObjects.length !== 1) {
             partners += ` and `;
         } else if(i !== 0) {
             partners += ` `;
@@ -81,9 +81,9 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
 
     //set featured characters
     let featuring = ``;
-    let ftObjects = feature.split('+').length > 1 ? feature.split('+').map(character => JSON.parse(character)) : [];
+    let ftObjects = feature.split('+').map(character => JSON.parse(character));
     ftObjects.forEach((character, i) => {
-        if(ftObjects.length === (i + 1)) {
+        if(ftObjects.length === (i + 1) && ftObjects.length !== 1) {
             featuring += ` and `;
         } else if(i !== 0) {
             featuring += ` `;
@@ -93,6 +93,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
             featuring += `,`;
         }
     });
+    console.log(featuring);
     let html = `<div class="thread lux-track grid-item status--${status} ${character.split(' ')[0]} delay--${delayClass} type--${type.split(' ')[0]} ${partnerClasses} grid-item"><div class="thread--wrap">
         <a class="thread--character" href="${siteURL}/?showuser=${character.split('#')[1]}">${character.split('#')[0]}</a>
         <a href="${siteURL}/?showtopic=${threadID}&view=getnewpost" target="_blank" class="thread--title">${title}</a>
@@ -470,6 +471,9 @@ function fillThreadForm(siteData, characterData, featureData, form) {
     fillSiteSelect(siteData, form);
     let characterList = document.querySelector('#character');
     let partnerLists = document.querySelectorAll('.partner select');
+    localStorage.setItem('partnerList', '');
+    localStorage.setItem('siteName', '');
+    localStorage.setItem('featureData', '');
 
     siteList.addEventListener('change', e => {
         let siteName = e.currentTarget.options[e.currentTarget.selectedIndex].value.toLowerCase().trim();
@@ -518,6 +522,9 @@ function fillThreadForm(siteData, characterData, featureData, form) {
         partnerHTML += uniquePartners.map(item => `<option value="${item.partnerID}">${capitalize(item.partner)}</option>`);
         partnerLists = document.querySelectorAll('.partner select');
         partnerLists.forEach(partnerList => partnerList.innerHTML = partnerHTML);
+        localStorage.setItem('partnerList', partnerHTML);
+        localStorage.setItem('siteName', siteName);
+        localStorage.setItem('featureData', JSON.stringify(featureData.map(data => JSON.stringify(data))));
     });
 
     partnerLists.forEach(partnerList => {
