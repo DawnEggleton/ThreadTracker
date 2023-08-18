@@ -70,7 +70,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
             partnerClasses += ` `;
         }
         partners += `<a href="${siteURL}/${directoryString}${partner.id.toLowerCase().trim()}">${partner.partner.toLowerCase().trim()}</a>`;
-        partnerClasses += `partner--${partner.partner.toLowerCase().trim().replaceAll(' ', '')}`;
+        partnerClasses += `partner--${partner.partner.toLowerCase().trim().replaceAll(' ', '').toLowerCase().trim()}`;
         if(partnerObjects.length !== (i + 1)) {
             partnerClasses += ` `;
             if(partnerObjects.length !== 2) {
@@ -81,6 +81,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
 
     //set featured characters
     let featuring = ``;
+    console.log(feature);
     let ftObjects = feature.split('+').map(character => JSON.parse(character));
     ftObjects.forEach((character, i) => {
         if(ftObjects.length === (i + 1) && ftObjects.length !== 1) {
@@ -265,7 +266,7 @@ function populatePage(array, siteObject) {
         document.querySelector('.tracker--characters').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".${character.split(' ')[0]}"/>${character.split(' ')[0]}</label>`);
     });
     partners.forEach(partner => {
-        document.querySelector('.tracker--partners').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".partner--${partner.split('#')[0].replaceAll(' ', '')}"/>${partner.split('#')[0]}</label>`);
+        document.querySelector('.tracker--partners').insertAdjacentHTML('beforeend', `<label><input type="checkbox" value=".partner--${partner.split('#')[0].replaceAll(' ', '').toLowerCase().trim()}"/>${partner.split('#')[0]}</label>`);
     });
 }
 function debounce(fn, threshold) {
