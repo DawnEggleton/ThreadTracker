@@ -95,7 +95,7 @@
                 fetch(`${sheet}/Threads`)
                 .then((response) => response.json())
                 .then((threadData) => {
-                    let siteThreads = threadData.filter(item => item.Site === siteName.toLowerCase().trim());
+                    let siteThreads = threadData.filter(item => item.Site.toLowerCase().trim() === siteName.toLowerCase().trim());
                     let threads = loadThreads(siteThreads);
 
                     console.log(threads);
