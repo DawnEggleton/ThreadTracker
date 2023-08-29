@@ -94,7 +94,7 @@ function formatThread(site, siteURL, status, character, feature, title, threadID
         }
     });
     let buttons = ``;
-    if (status === 'complete') {
+    if (status !== 'complete') {
         buttons = `<button onClick="changeStatus(this)" data-status="${status}" data-id="${threadID}" data-site="${site}">Change Turn</button>
         <button onClick="markComplete(this)" data-id="${threadID}" data-site="${site}">Mark Complete</button>`;
     }
