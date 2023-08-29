@@ -178,7 +178,7 @@ function markComplete(e) {
         'ThreadID': e.dataset.id,
         'Site': e.dataset.site,
         'Status': 'Complete'
-    });
+    }, thread);
 }
 function addThread(e) {
     let site = e.currentTarget.querySelector('#site').options[e.currentTarget.querySelector('#site').selectedIndex].value.toLowerCase().trim(),
@@ -227,7 +227,7 @@ function addThread(e) {
         'Partner': partner,
         'Type': type,
         'LastUpdated': update
-    }, e);
+    }, null, e);
 }
 function populatePage(array, siteObject) {
     let html = ``;
@@ -582,7 +582,7 @@ function addCharacter(e) {
         'Site': site,
         'Character': character,
         'CharacterID': characterID
-    }, e);
+    }, null, e);
 }
 function addSite(e) {
     let directory = e.currentTarget.querySelector('#directory').options[e.currentTarget.querySelector('#directory').selectedIndex].value.trim(),
@@ -594,7 +594,7 @@ function addSite(e) {
         'Site': site,
         'URL': url,
         'Directory': directory
-    }, e);
+    }, null, e);
 }
 function partnerCheck(featureData, form) {
     let partnerField = form.querySelector('#writer');
@@ -624,7 +624,7 @@ function addPartner(e) {
         'CharacterID': characterID,
         'Writer': writer,
         'WriterID': writerID
-    }, e);
+    }, null, e);
 }
 function fixMc(str) {
     return (""+str).replace(/Mc(.)/g, function(m, m1) {
