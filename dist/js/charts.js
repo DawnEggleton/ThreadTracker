@@ -112,7 +112,7 @@ function configTime(threads) {
 function configStatus(threads) {
     let owing = threads.filter(thread => thread.status === 'mine' || thread.status === 'start').length;
     let active = threads.filter(thread => thread.status === 'theirs' || thread.status === 'upcoming').length;
-    let complete = threads.filter(thread => thread.status === 'done').length;
+    let complete = threads.filter(thread => thread.status === 'complete').length;
     let statusConfig = {
         series: [owing, active, complete],
         labels: ['Mine', 'Theirs', 'Completed'],
