@@ -271,7 +271,12 @@ function configType(threads) {
 
 function configPartners(threads) {
     let threadPartners = threads.map(thread => thread.partners.split('+').map(item => JSON.parse(item)));
-    let partnerNames = threadPartners.map(item => item[0].partner);
+    let partnerNames = [];
+    threadPartners.forEach(thread => {
+        thread.forEach(threadPartner => {
+            partnerNames.push(threadPartner.partner);
+        });
+    });
     let consolidatedPartners = [...new Set(partnerNames)];
     let partnerCounts = consolidatedPartners.reduce((accumulator, value) => {
         return {...accumulator, [value]: 0};
@@ -282,82 +287,27 @@ function configPartners(threads) {
             partnerCounts[partner]++;
         });
     });
-    let partners = [], counts = [];
+    let partners = [], counts = [], final = [];
     for (const partnerName in partnerCounts) {
         partners.push(capitalize(partnerName, [`'`, `-`]));
         counts.push(partnerCounts[partnerName]);
+        final.push({
+            x: capitalize(partnerName, [`'`, `-`]).trim(),
+            y: partnerCounts[partnerName],
+            fillColor: 'var(--accent)',
+        })
     }
     let partnerConfig = {
-        series: counts,
-        labels: partners,
-        colors: ['rgba(189, 173, 133, 1)', 'rgb(134, 123, 155)', 'rgb(174, 140, 161)', 'rgb(141, 165, 176)', 'rgb(152, 159, 125)', 'rgba(125, 159, 129, 1)', 'rgba(162, 129, 119, 1)'],
+        series: [{data: final}],
         chart: {
-            type: 'donut',
+            type: 'bar',
             height: '400px',
         },
         plotOptions: {
-            pie: {
-                donut: {
-                    size: '50%',
-                }
+            bar: {
+                horizontal: true
             }
         },
-        states: {
-            hover: {
-                filter: {
-                    type: 'none',
-                    value: 0,
-                }
-            },
-            active: {
-                filter: {
-                    type: 'none',
-                    value: 0,
-                }
-            },
-        },
-        dataLabels: {
-            enabled: true,
-            formatter: function(value, { seriesIndex, dataPointIndex, w }) {
-                return w.config.series[seriesIndex]
-            },
-            style: {
-                fontSize: '20px',
-                fontFamily: 'var(--font-accent)',
-                fontWeight: '400'
-            },
-            dropShadow: {
-                enabled: false,
-            }
-        }, 
-        legend: {
-            fontSize: '14px',
-            fontFamily: 'var(--font-body)',
-            fontWeight: '400',
-            markers: {
-                width: '10px',
-                height: '10px',
-                offsetX: '-2px',
-            },
-        },
-        stroke: {
-            show: true,
-            colors: 'var(--bg-body)',
-        },
-        tooltip: {
-            enabled: false,
-        },
-        theme: {
-            palette: 'palette4',
-        },
-        responsive: [{
-            breakpoint: 560,
-            options: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
     };
 
     return partnerConfig;
